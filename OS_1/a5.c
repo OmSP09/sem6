@@ -100,19 +100,20 @@ int main()
         {
             if (Finish[i] == 0)
             {
-                int j;
-                for (j = 0; j < m; j++)
+                int count_resources = 0;
+                for (int j = 0; j < m; j++)
                 {
-                    if (Need[i][j] > Work[j])
+                    if (Need[i][j] <= Work[j])
                     {
-                        break;
+                        count_resources++;
                     }
                 }
-                if (j == m)
+                if (count_resources == m)
                 {
-                    for (int k = 0; k < m; k++)
+                    printf("\nProcess %d can run to completion", i + 1);
+                    for (int j = 0; j < m; j++)
                     {
-                        Work[k] += Allocation[i][k];
+                        Work[j] += Allocation[i][j];
                     }
                     Finish[i] = 1;
                     flag = 1;
@@ -122,10 +123,43 @@ int main()
         }
         if (flag == 0)
         {
-            printf("\nSystem is not in safe state.\n");
+            printf("\nThe system is not in safe state");
             return 0;
         }
     }
-    printf("\nSystem is in safe state.\n");
+    printf("\nThe system is in safe state\n");
+
+    // Accept request for any process and check if request is granted or not
+    int process, request[m];
+    printf("\nEnter the process number for resource request: ");
+    scanf("%d", &process);
+    printf("Enter the request array: ");
+    for (int i = 0; i < m; i++)
+        scanf("%d", &request[i]);
+
+    // Check if request can be granted
+    int resources_count = 0;
+    for (int i = 0; i < m; i++)
+    {
+        if (request[i] <= Need[process - 1][i] && request[i] <= Available[i])
+        {
+            resources_count++;
+        }
+    }
+    if (resources_count == m)
+    {
+        printf("\nRequest granted for process %d\n", process);
+        for (int i = 0; i < m; i++)
+        {
+            Available[i] -= request[i];
+            Allocation[process - 1][i] += request[i];
+            Need[process - 1][i] -= request[i];
+        }
+    }
+    else
+    {
+        printf("\nRequest not granted for process %d\n", process);
+    }
+
     return 0;
 }

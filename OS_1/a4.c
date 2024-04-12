@@ -81,6 +81,7 @@ int main()
 
     // Check if system is in safe state
     int Work[m];
+    
     for (int i = 0; i < m; i++)
     {
         Work[i] = Available[i];
@@ -105,6 +106,7 @@ int main()
                 {
                     if (Need[i][j] > Work[j])
                     {
+                        printf("Breaking %d",i);
                         break;
                     }
                 }
